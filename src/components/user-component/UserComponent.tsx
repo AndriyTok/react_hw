@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
 import {IUser} from "../models/IUser";
 
+
 interface IProps{
     user:IUser;
     getPosts:(id:number)=> void;
