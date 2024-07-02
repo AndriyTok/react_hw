@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
 import {IPost} from "../models/IPost";
 import styles from './PostsComponent.module.css'
+import {useRef, useEffect} from "react";
 
 interface IProps {
     posts: IPost[];
@@ -8,6 +9,14 @@ interface IProps {
 }
 
 const PostsComponent:FC<IProps> = ({posts, loading}) => {
+    const postsRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (posts.length > 0 && postsRef.current) {
+            postsRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [posts]);
+
     if (loading) {
         return <div>Loading posts...</div>;
     }
@@ -17,6 +26,7 @@ const PostsComponent:FC<IProps> = ({posts, loading}) => {
     }
 
     return (
+       <div ref={postsRef}>
         <ul className={styles.posts_ul}>
             {posts.map(value => (
                 <ul key={value.id}>
@@ -30,7 +40,7 @@ const PostsComponent:FC<IProps> = ({posts, loading}) => {
                 </ul>
             ))}
         </ul>
-
+       </div>
     );
 };
 

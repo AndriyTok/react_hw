@@ -1,4 +1,4 @@
-import React, { useState, useEffect}  from 'react';
+import React, { useState, useEffect, useRef}  from 'react';
 import UserComponent from "../user-component/UserComponent";
 import {IUser} from "../models/IUser";
 import {IPost} from "../models/IPost";
@@ -12,6 +12,7 @@ const UsersComponent = () => {
     const[posts, setPosts] = useState<IPost[]>([]);
     const [loadingPosts, setLoadingPosts] = useState(false);
     const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+    const postsRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         getAllUsers().then((users) => {
@@ -24,7 +25,12 @@ const UsersComponent = () => {
         setSelectedUserId(id);
         getPostsOfUserById(id)
             .then(posts => setPosts([...posts]))
-            .finally(() => setLoadingPosts(false));
+            .finally(() => {
+                setLoadingPosts(false);
+                if (postsRef.current) {
+                    postsRef.current.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
     }
 
     return (
@@ -34,7 +40,7 @@ const UsersComponent = () => {
                 {users.map((user) => (<UserComponent key={user.id} user={user} getPosts={getPosts}/>))}
             </div>
 
-            <div className={styles.posts_container}>
+            <div className={styles.posts_container} ref={postsRef}>
                 {selectedUserId !== null && (
                     <PostsComponent posts={posts} loading={loadingPosts} />
                 )}
