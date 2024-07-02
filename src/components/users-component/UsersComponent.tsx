@@ -9,6 +9,8 @@ const UsersComponent = () => {
 
     const[users, setUsers] = useState<IUser[]>([])
     const[posts, setPosts] = useState<IPost[]>([]);
+    const [loadingPosts, setLoadingPosts] = useState(false);
+    const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
 
     useEffect(() => {
         getAllUsers().then((users) => {
@@ -17,7 +19,11 @@ const UsersComponent = () => {
     }, []);
 
     const getPosts = (id:number) => {
-        getPostsOfUserById(id).then(posts=>setPosts([...posts]))
+        setLoadingPosts(true);
+        setSelectedUserId(id);
+        getPostsOfUserById(id)
+            .then(posts => setPosts([...posts]))
+            .finally(() => setLoadingPosts(false));
     }
 
     return (
@@ -28,7 +34,9 @@ const UsersComponent = () => {
             </div>
             <hr/>
             <div>
-                <PostsComponent posts={posts}/>
+                {selectedUserId !== null && (
+                    <PostsComponent posts={posts} loading={loadingPosts} />
+                )}
             </div>
         </div>
     );
