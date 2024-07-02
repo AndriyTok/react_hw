@@ -1,5 +1,6 @@
 import React, {FC} from 'react';
 import {IPost} from "../models/IPost";
+import styles from './PostsComponent.module.css'
 
 interface IProps {
     posts: IPost[];
@@ -16,7 +17,7 @@ const PostsComponent:FC<IProps> = ({posts, loading}) => {
     }
 
     return (
-        <ul>
+        <ul className={styles.posts_ul}>
             {posts.map(value => (
                 <ul key={value.id}>
                     <li>ID: {value.id}</li>
@@ -29,6 +30,7 @@ const PostsComponent:FC<IProps> = ({posts, loading}) => {
                 </ul>
             ))}
         </ul>
+
     );
 };
 

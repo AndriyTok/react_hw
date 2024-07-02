@@ -4,6 +4,7 @@ import {IUser} from "../models/IUser";
 import {IPost} from "../models/IPost";
 import {getAllUsers, getPostsOfUserById} from "../services/api.service";
 import PostsComponent from "../posts-components/PostsComponent";
+import styles from './UsersComponent.module.css'
 
 const UsersComponent = () => {
 
@@ -28,12 +29,12 @@ const UsersComponent = () => {
 
     return (
         <div>
-            <hr/>
-            <div>
+
+            <div className={styles.users_container}>
                 {users.map((user) => (<UserComponent key={user.id} user={user} getPosts={getPosts}/>))}
             </div>
-            <hr/>
-            <div>
+
+            <div className={styles.posts_container}>
                 {selectedUserId !== null && (
                     <PostsComponent posts={posts} loading={loadingPosts} />
                 )}
