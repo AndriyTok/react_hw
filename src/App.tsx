@@ -1,10 +1,14 @@
-import React, {FC} from 'react';
+import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import buttonComponent from "./components/ButtonComponent";
+import ButtonComponent from "./components/ButtonComponent";
 
-const App:FC = () => {
+
+const App = () => {
   return (
     <div>
+      <ButtonComponent/>
     </div>
   );
 }
