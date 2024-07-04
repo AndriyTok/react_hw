@@ -1,14 +1,14 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import buttonComponent from "./components/ButtonComponent";
-import ButtonComponent from "./components/ButtonComponent";
+import ButtonsComponent from "./components/ButtonsComponent";
+import ButtonComponent1 from "./components/ButtonComponent1";
 
 
 const App = () => {
   return (
     <div>
-      <ButtonComponent/>
+      <ButtonsComponent/>
     </div>
   );
 }

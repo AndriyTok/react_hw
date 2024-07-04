@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import useToogle from "../customHooks/useToogle";
 
-const ButtonComponent:FC = () => {
+const ButtonComponent1:FC = () => {
     let [value_to_be_changed,toogle] = useToogle(true);
 
     return (
@@ -12,4 +12,4 @@ const ButtonComponent:FC = () => {
     );
 };
 
-export default ButtonComponent;
+export default ButtonComponent1;
