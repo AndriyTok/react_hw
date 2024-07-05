@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef}  from 'react';
+import React, {useState, useEffect, useRef, Component, createRef} from 'react';
 import UserComponent from "../user-component/UserComponent";
 import {IUser} from "../models/IUser";
 import {IPost} from "../models/IPost";
@@ -6,47 +6,54 @@ import {getAllUsers, getPostsOfUserById} from "../services/api.service";
 import PostsComponent from "../posts-components/PostsComponent";
 import styles from './UsersComponent.module.css'
 
-const UsersComponent = () => {
+class UsersComponent extends Component{
 
-    const[users, setUsers] = useState<IUser[]>([])
-    const[posts, setPosts] = useState<IPost[]>([]);
-    const [loadingPosts, setLoadingPosts] = useState(false);
-    const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
-    const postsRef = useRef<HTMLDivElement>(null);
+    state = {
+        users: [] as IUser[],
+        posts: [] as IPost[],
+        loadingPosts: false,
+        selectedUserId: null as number | null
+    };
 
-    useEffect(() => {
-        getAllUsers().then((users) => {
-            setUsers(users);
+    postsRef = createRef<HTMLDivElement>();
+
+    componentDidMount() {
+        getAllUsers().then(users => {
+            this.setState({ users });
         });
-    }, []);
-
-    const getPosts = (id:number) => {
-        setLoadingPosts(true);
-        setSelectedUserId(id);
-        getPostsOfUserById(id)
-            .then(posts => setPosts([...posts]))
-            .finally(() => {
-                setLoadingPosts(false);
-                if (postsRef.current) {
-                    postsRef.current.scrollIntoView({ behavior: 'smooth' });
-                }
-            });
     }
 
-    return (
-        <div>
+    getPosts = (id: number) => {
+        this.setState({ loadingPosts: true, selectedUserId: id });
+        getPostsOfUserById(id)
+            .then(posts => this.setState({ posts }))
+            .finally(() => {
+                this.setState({ loadingPosts: false });
+                if (this.postsRef.current) {
+                    this.postsRef.current.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+    };
 
-            <div className={styles.users_container}>
-                {users.map((user) => (<UserComponent key={user.id} user={user} getPosts={getPosts}/>))}
-            </div>
+    render() {
+        const { users, posts, loadingPosts, selectedUserId } = this.state;
 
-            <div className={styles.posts_container} ref={postsRef}>
-                {selectedUserId !== null && (
-                    <PostsComponent posts={posts} loading={loadingPosts} />
-                )}
+        return (
+            <div>
+                <div className={styles.users_container}>
+                    {users.map(user => (
+                        <UserComponent key={user.id} user={user} getPosts={this.getPosts} />
+                    ))}
+                </div>
+
+                <div className={styles.posts_container} ref={this.postsRef}>
+                    {selectedUserId !== null && (
+                        <PostsComponent posts={posts} loading={loadingPosts} />
+                    )}
+                </div>
             </div>
-        </div>
-    );
-};
+        );
+    }
+}
 
 export default UsersComponent;
