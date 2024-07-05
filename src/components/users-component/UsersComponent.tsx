@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef, Component, createRef} from 'react';
+import React, {Component, createRef} from 'react';
 import UserComponent from "../user-component/UserComponent";
 import {IUser} from "../models/IUser";
 import {IPost} from "../models/IPost";

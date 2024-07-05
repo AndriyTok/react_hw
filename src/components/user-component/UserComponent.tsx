@@ -1,4 +1,4 @@
-import React, {Component, FC} from 'react';
+import React, {Component} from 'react';
 import {IUser} from "../models/IUser";
 import styles from "./UserComponent.module.css"
 
