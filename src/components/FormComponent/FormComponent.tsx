@@ -6,32 +6,42 @@ import {joiResolver} from "@hookform/resolvers/joi";
 import formCustomHandler from "../../services/formCustomHandler";
 
 const FormComponent = () => {
-
-    // const [isSumbitted, setIsSumbitted] = useState(false);
+    const [showErrors, setShowErrors] = useState(false);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
     const {
-        formState:{
-            errors,
-            isValid,
-            touchedFields},
+        formState: { errors, isValid, touchedFields },
         register,
-        handleSubmit
+        handleSubmit,
     } = useForm<IFormPost>({
-        mode:'all',
-        resolver: joiResolver(postValidator)
+        mode: 'all',
+        resolver: joiResolver(postValidator),
     });
+
+    const combinedSubmitHandler = async (data: IFormPost) => {
+        setShowErrors(true);
+        await formCustomHandler(data, setSuccessMessage);
+    };
 
     return (
         <div>
-            {touchedFields.title &&errors.title && <div>title errors: {errors.title?.message}</div>}
-            {touchedFields.text && errors.text && <div>title errors: {errors.text?.message}</div>}
-            <form onSubmit={handleSubmit(formCustomHandler)}>
-                <input type="text" {...register('title')}/> <br/>
-                <textarea id="post_body" rows={5} cols={33} {...register('text')}></textarea>
-                <button disabled={!isValid}>Submit</button>
-
+            {showErrors && (
+                <>
+                    {errors.title && <div>Title errors: {errors.title?.message}</div>}
+                    {errors.text && <div>Text errors: {errors.text?.message}</div>}
+                </>
+            )}
+            <form onSubmit={handleSubmit(combinedSubmitHandler)}>
+                <input type="text" {...register('title')} /> <br />
+                <textarea
+                    id="post_body"
+                    rows={5}
+                    cols={33}
+                    {...register('text')}
+                />
+                <button type="submit" disabled={!isValid}>Submit</button>
             </form>
-
+            {successMessage && <div>{successMessage}</div>}
         </div>
     );
 };
