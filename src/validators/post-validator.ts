@@ -1,6 +1,6 @@
 import Joi from "joi";
-
-const postValidator = Joi.object({
+//joi allows to set a schema that describes expected data types and restrictions for each field of the object
+const postValidator = Joi.object({//setting schema
     title: Joi.string()
         .min(3)
         .error(errors => {
