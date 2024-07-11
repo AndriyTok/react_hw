@@ -10,6 +10,7 @@ const formCustomHandler = async (data: IFormPost, setSuccessMessage: React.Dispa
             //sending converted data in .json format:
             body: JSON.stringify({
                 userId:data.userId,
+                // id:data.id,
                 title: data.title,
                 body: data.text,
             }),

@@ -8,12 +8,13 @@ import formCustomHandler from "../../services/formCustomHandler";
 const FormComponent = () => {
     //useState is used to dynamically save the state (if the form is submitted) and show the message below the form
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
-    const [isSumbitted, setIsSubmitted] = useState(false);
+    const [isSubmitted, setIsSubmitted] = useState(false);
+
 //formState has the form-object's properties
     const {
         formState: { errors, isValid, touchedFields },
         register, //it is necessary for react-hook-form to save the state of each field
-        handleSubmit, //performs exact function after every valid sumbition
+        handleSubmit, //performs exact function after every valid submittion
     } = useForm<IFormPost>({
         mode: 'all',
         resolver: joiResolver(postValidator),
@@ -22,6 +23,7 @@ const FormComponent = () => {
 // status of request
     const onSubmitCustom = async (data: IFormPost) => {
         setIsSubmitted(true);
+
         try {
             await formCustomHandler(data, setSuccessMessage);
             setSuccessMessage("Data was successfully sent to jsonplaceholder and can be checked in console!");
@@ -31,20 +33,23 @@ const FormComponent = () => {
     };
     return (
         <div>
-            {isSumbitted && (
+            {isSubmitted && (
                 <>
                     {errors.title && <div>Title errors: {errors.title?.message}</div>}
                     {errors.text && <div>Text errors: {errors.text?.message}</div>}
                 </>
             )}
             <form onSubmit={handleSubmit(onSubmitCustom)}>
-                <input type="text" {...register('title')} /> <br />
+                <input type="text" {...register('title')} /> <br/>
                 <textarea
                     id="post_body"
                     rows={5}
                     cols={33}
                     {...register('text')}
-                />
+                /> <br/>
+                <input type="number" placeholder="User ID"
+                       {...register('userId')}
+                /> <br/>
                 <button type="submit">Submit</button>
             </form>
             {successMessage && <div>{successMessage}</div>}
