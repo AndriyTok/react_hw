@@ -6,10 +6,9 @@ import {joiResolver} from "@hookform/resolvers/joi";
 import formCustomHandler from "../../services/formCustomHandler";
 
 const FormComponent = () => {
-    // const [showErrors, setShowErrors] = useState(false);
-
     //useState is used to dynamically save the state (if the form is submitted) and show the message below the form
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
+    const [isSumbitted, setIsSubmitted] = useState(false);
 //formState has the form-object's properties
     const {
         formState: { errors, isValid, touchedFields },
@@ -20,8 +19,9 @@ const FormComponent = () => {
         resolver: joiResolver(postValidator),
     });
 //is performed after submitting. It uses custom function we wrote before to send the data to server and check the
-    //status of request
+// status of request
     const onSubmitCustom = async (data: IFormPost) => {
+        setIsSubmitted(true);
         try {
             await formCustomHandler(data, setSuccessMessage);
             setSuccessMessage("Data was successfully sent to jsonplaceholder and can be checked in console!");
@@ -31,12 +31,12 @@ const FormComponent = () => {
     };
     return (
         <div>
-
+            {isSumbitted && (
                 <>
                     {errors.title && <div>Title errors: {errors.title?.message}</div>}
                     {errors.text && <div>Text errors: {errors.text?.message}</div>}
                 </>
-
+            )}
             <form onSubmit={handleSubmit(onSubmitCustom)}>
                 <input type="text" {...register('title')} /> <br />
                 <textarea
@@ -44,7 +44,7 @@ const FormComponent = () => {
                     rows={5}
                     cols={33}
                     {...register('text')}
-                />0
+                />
                 <button type="submit">Submit</button>
             </form>
             {successMessage && <div>{successMessage}</div>}
